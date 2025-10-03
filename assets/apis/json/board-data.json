@@ -1,0 +1,25 @@
+{
+  "id": "board-1",
+  "title": "Boardify Pro",
+  "date": "2025-10-03",
+  "lists": [
+    {
+      "id": "list-1",
+      "title": "To Do",
+      "status": "todo",
+      "cards": []
+    },
+    {
+      "id": "list-2",
+      "title": "In Progress",
+      "status": "in-progress",
+      "cards": []
+    },
+    {
+      "id": "list-3",
+      "title": "Done",
+      "status": "done",
+      "cards": []
+    }
+  ]
+}
