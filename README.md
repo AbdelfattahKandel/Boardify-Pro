@@ -27,7 +27,7 @@ Boardify Pro is a modern Kanban-style productivity dashboard built with Angular 
 
 ### 1. Clone and install dependencies
 ```bash
-git clone https://github.com/your-org/boardify-pro.git
+git clone  https://github.com/AbdelfattahKandel/Boardify-Pro.git
 cd boardify-pro
 npm install
 ```
