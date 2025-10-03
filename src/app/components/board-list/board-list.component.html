@@ -1,0 +1,26 @@
+<div class="bg-black/60 backdrop-blur-md rounded-lg p-4 w-72 min-w-72 flex flex-col h-fit max-h-[calc(100vh-200px)] shadow-lg transition-all duration-300 hover:bg-black/70 hover:shadow-xl">
+  <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
+    <h3 class="font-semibold text-[0.95rem] text-white m-0">{{ list().title }}</h3>
+    <span class="flex items-center justify-center min-w-7 h-7 px-1.5 bg-white/20 text-white rounded-full text-xs font-semibold">
+      {{ list().cards.length }}
+    </span>
+  </div>
+
+  <div
+    cdkDropList
+    [id]="list().id"
+    [cdkDropListData]="list().cards"
+    (cdkDropListDropped)="onDrop($event)"
+    class="flex-1 min-h-[120px] overflow-y-auto pr-1"
+  >
+    @if (list().cards.length === 0) {
+      <div class="flex flex-col items-center justify-center py-8 px-4 text-white/50 text-center">
+        <i class="pi pi-inbox text-4xl mb-3 opacity-40"></i>
+        <p class="text-sm font-normal m-0">No cards yet</p>
+      </div>
+    }
+    @for (card of list().cards; track card.id) {
+      <app-board-card [card]="card" />
+    }
+  </div>
+</div>

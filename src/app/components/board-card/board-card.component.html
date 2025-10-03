@@ -1,0 +1,58 @@
+<div cdkDrag 
+     class="cursor-pointer mb-4 transition-all duration-300 hover:-translate-y-0.5"
+     [class.border-l-4]="true"
+     [class.border-orange-500]="card().status === 'todo'"
+     [class.border-blue-500]="card().status === 'in-progress'"
+     [class.border-green-500]="card().status === 'done'"
+     (click)="openDialog()">
+  <p-card [header]="card().title">
+  </p-card>
+</div>
+
+<!-- Card Details Dialog -->
+<p-dialog 
+  [(visible)]="dialogVisible" 
+  [header]="card().title"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false">
+  
+  <div class="flex flex-col gap-6">
+    <!-- Status -->
+    <div class="flex items-start gap-4">
+      <label class="font-bold min-w-[100px]">Status:</label>
+      <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm text-white"
+            [class.bg-orange-500]="card().status === 'todo'"
+            [class.bg-blue-500]="card().status === 'in-progress'"
+            [class.bg-green-500]="card().status === 'done'">
+        <i class="pi" 
+           [class.pi-clock]="card().status === 'todo'"
+           [class.pi-spinner]="card().status === 'in-progress'"
+           [class.pi-check-circle]="card().status === 'done'"></i>
+        {{ card().status === 'todo' ? 'To Do' : card().status === 'in-progress' ? 'In Progress' : 'Done' }}
+      </span>
+    </div>
+
+    <!-- Type -->
+    @if (card().type) {
+      <div class="flex items-start gap-4">
+        <label class="font-bold min-w-[100px]">Type:</label>
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm text-white"
+              [class.bg-blue-500]="card().type === 'task'"
+              [class.bg-purple-600]="card().type === 'report'">
+          <i class="pi" [class.pi-check-square]="card().type === 'task'" [class.pi-file]="card().type === 'report'"></i>
+          {{ card().type === 'task' ? 'Task' : 'Report' }}
+        </span>
+      </div>
+    }
+
+    <!-- Description -->
+    @if (card().description) {
+      <div class="flex flex-col gap-2">
+        <label class="font-bold">Description:</label>
+        <p class="m-0 p-4 bg-surface-100 rounded-lg leading-relaxed">{{ card().description }}</p>
+      </div>
+    }
+  </div>
+</p-dialog>

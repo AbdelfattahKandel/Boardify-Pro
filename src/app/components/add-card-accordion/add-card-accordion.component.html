@@ -1,0 +1,101 @@
+<div class="accordion-container">
+  <p-accordion [multiple]="false">
+    <!-- Task Accordion -->
+    <p-accordionTab header="add task">
+      <div class="form-container">
+        <div class="form-field">
+          <label for="task-list"> select list</label>
+          <p-dropdown
+            id="task-list"
+            [(ngModel)]="selectedTaskList"
+            [options]="lists()"
+            optionLabel="title"
+            placeholder="select list"
+            styleClass="w-full"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="task-title">task title</label>
+          <input
+            id="task-title"
+            type="text"
+            pInputText
+            [(ngModel)]="taskTitle"
+            placeholder="task title"
+            class="w-full"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="task-description">task description</label>
+          <textarea
+            id="task-description"
+            pInputTextarea
+            [(ngModel)]="taskDescription"
+            placeholder="task description"
+            rows="3"
+            class="w-full"
+          ></textarea>
+        </div>
+
+        <p-button
+          label="add task"
+          icon="pi pi-plus"
+          (onClick)="addTask()"
+          [disabled]="!taskTitle.trim() || !selectedTaskList"
+          class="w-full"
+        />
+      </div>
+    </p-accordionTab>
+
+    <!-- Report Accordion -->
+    <p-accordionTab header="add report">
+      <div class="form-container">
+        <div class="form-field">
+          <label for="report-list">select list</label>
+          <p-dropdown
+            id="report-list"
+            [(ngModel)]="selectedReportList"
+            [options]="lists()"
+            optionLabel="title"
+            placeholder="select list"
+            styleClass="w-full"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="report-title">report title</label>
+          <input
+            id="report-title"
+            type="text"
+            pInputText
+            [(ngModel)]="reportTitle"
+            placeholder="report title"
+            class="w-full"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="report-description">report description</label>
+          <textarea
+            id="report-description"
+            pInputTextarea
+            [(ngModel)]="reportDescription"
+            placeholder="report description"
+            rows="3"
+            class="w-full"
+          ></textarea>
+        </div>
+
+        <p-button
+          label="add report"
+          icon="pi pi-plus"
+          (onClick)="addReport()"
+          [disabled]="!reportTitle.trim() || !selectedReportList"
+          class="w-full"
+        />
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+</div>

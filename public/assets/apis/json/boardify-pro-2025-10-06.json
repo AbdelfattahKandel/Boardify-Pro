@@ -1,0 +1,75 @@
+{
+  "id": "board-1",
+  "title": "Boardify Pro",
+  "date": "2025-10-06",
+  "lists": [
+    {
+      "id": "list-1",
+      "title": "To Do",
+      "status": "todo",
+      "cards": [
+        {
+          "id": "card-1",
+          "title": "Design wireframes",
+          "description": "Create low-fidelity wireframes for the main dashboard",
+          "type": "task",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "list-2",
+      "title": "In Progress",
+      "status": "in-progress",
+      "cards": [
+        {
+          "id": "card-5",
+          "title": "Setup database schema",
+          "type": "task",
+          "status": "in-progress"
+        }
+      ]
+    },
+    {
+      "id": "list-3",
+      "title": "Done",
+      "status": "done",
+      "cards": [
+        {
+          "id": "card-4",
+          "title": "Implement authentication",
+          "description": "Add user login and registration functionality",
+          "type": "task",
+          "status": "done"
+        },
+        {
+          "id": "card-2",
+          "title": "Setup project repository",
+          "description": "Initialize Git repository and setup branch protection rules",
+          "type": "task",
+          "status": "done"
+        },
+        {
+          "id": "card-6",
+          "title": "Project kickoff meeting",
+          "description": "Initial meeting with stakeholders to define project scope",
+          "type": "report",
+          "status": "done"
+        },
+        {
+          "id": "card-7",
+          "title": "Environment setup",
+          "description": "Configure development, staging, and production environments",
+          "type": "task",
+          "status": "done"
+        },
+        {
+          "id": "card-3",
+          "title": "Write documentation",
+          "type": "report",
+          "status": "done"
+        }
+      ]
+    }
+  ]
+}

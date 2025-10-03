@@ -1,0 +1,227 @@
+<div class="container1">
+  <div class="content-wrapper">
+    @if (board$ | async; as board) {
+      <!-- Header -->
+      <div class="header">
+        <div class="header-left">
+          <button class="sidebar-toggle" (click)="toggleSidebar()">
+            <i class="pi pi-bars"></i>
+          </button>
+          <h1 class="title">{{ board.title }}</h1>
+        </div>
+
+        <div class="header-controls">
+          <!-- View Selector -->
+          <div class="view-selector">
+            <button 
+              class="view-btn" 
+              [class.active]="currentView === 'board'"
+              (click)="currentView = 'board'">
+              <i class="pi pi-th-large"></i>
+              <span>Board</span>
+            </button>
+            <button 
+              class="view-btn" 
+              [class.active]="currentView === 'table'"
+              (click)="currentView = 'table'">
+              <i class="pi pi-table"></i>
+              <span>Table</span>
+            </button>
+            <button 
+              class="view-btn" 
+              [class.active]="currentView === 'timeline'"
+              (click)="currentView = 'timeline'">
+              <i class="pi pi-chart-line"></i>
+              <span>Timeline</span>
+            </button>
+          </div>
+
+          <div class="date-selector">
+            <label for="board-date">Date:</label>
+            <p-datepicker
+              [(ngModel)]="selectedDate"
+              (ngModelChange)="onDateChange($event)"
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [minDate]="minDate"
+              [maxDate]="maxDate"
+              appendTo="body"
+              placeholder="Select date"
+            />
+            @if (savedDates.length > 0) {
+              <span class="saved-indicator">
+                <i class="pi pi-check-circle"></i>
+                {{ savedDates.length }}
+              </span>
+            }
+          </div>
+
+          <div class="button-group">
+            <p-button
+              icon="pi pi-download"
+              (onClick)="exportJson()"
+              severity="secondary"
+              [text]="true"
+              [rounded]="true"
+            />
+
+            <p-button
+              icon="pi pi-upload"
+              (onClick)="triggerFileInput()"
+              severity="primary"
+              [text]="true"
+              [rounded]="true"
+            />
+
+            <input
+              #fileInput
+              type="file"
+              id="fileInput"
+              accept="application/json"
+              (change)="importJson($event)"
+              class="hidden"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <!-- Sidebar Overlay -->
+        @if (sidebarOpen) {
+          <div class="sidebar-overlay" (click)="toggleSidebar()"></div>
+        }
+
+        <!-- Sidebar -->
+        <div class="sidebar" [class.open]="sidebarOpen">
+          <div class="sidebar-header">
+            <h3>Add New Card</h3>
+            <button class="close-btn" (click)="toggleSidebar()">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+          <app-add-card-accordion [lists]="board.lists" (cardAdded)="onCardAdded($event)" />
+        </div>
+
+        <!-- Board View -->
+        @if (currentView === 'board') {
+          <div class="board-content">
+            <div cdkDropListGroup class="board-lists">
+              @for (list of board.lists; track list.id) {
+                <app-board-list [list]="list" (cardDropped)="onCardDrop($event)" />
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Table View -->
+        @if (currentView === 'table') {
+          <div class="board-content">
+            <div class="bg-black/60 backdrop-blur-md rounded-lg p-6">
+              <h2 class="text-white text-xl font-bold mb-4">Table View</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full text-white">
+                  <thead>
+                    <tr class="border-b border-white/20">
+                      <th class="text-left p-3">Title</th>
+                      <th class="text-left p-3">Type</th>
+                      <th class="text-left p-3">Status</th>
+                      <th class="text-left p-3">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (list of board.lists; track list.id) {
+                      @for (card of list.cards; track card.id) {
+                        <tr class="border-b border-white/10 hover:bg-white/5">
+                          <td class="p-3">{{ card.title }}</td>
+                          <td class="p-3">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold" 
+                                  [class.bg-blue-500]="card.type === 'task'"
+                                  [class.bg-purple-600]="card.type === 'report'">
+                              {{ card.type === 'task' ? 'Task' : 'Report' }}
+                            </span>
+                          </td>
+                          <td class="p-3">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold"
+                                  [class.bg-orange-500]="card.status === 'todo'"
+                                  [class.bg-blue-500]="card.status === 'in-progress'"
+                                  [class.bg-green-500]="card.status === 'done'">
+                              {{ card.status === 'todo' ? 'To Do' : card.status === 'in-progress' ? 'In Progress' : 'Done' }}
+                            </span>
+                          </td>
+                          <td class="p-3 text-white/70">{{ card.description }}</td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Timeline View -->
+        @if (currentView === 'timeline') {
+          <div class="board-content">
+            <div class="bg-black/60 backdrop-blur-md rounded-lg p-6">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-white text-xl font-bold">Timeline Calendar</h2>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1 bg-white/10 text-white rounded hover:bg-white/20">Today</button>
+                  <button class="px-3 py-1 bg-white/10 text-white rounded hover:bg-white/20">Week</button>
+                  <button class="px-3 py-1 bg-white/20 text-white rounded">Month</button>
+                </div>
+              </div>
+
+              <!-- Calendar Grid -->
+              <div class="grid grid-cols-7 gap-1">
+                <!-- Days Header -->
+                <div class="text-center text-white/50 text-sm font-semibold p-2">SUN</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">MON</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">TUE</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">WED</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">THU</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">FRI</div>
+                <div class="text-center text-white/50 text-sm font-semibold p-2">SAT</div>
+
+                <!-- Calendar Days (Example for current month) -->
+                @for (day of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]; track day) {
+                  <div class="min-h-[100px] bg-white/5 rounded p-2 hover:bg-white/10 transition-all">
+                    <div class="text-white/70 text-sm mb-2">{{ day }}</div>
+                    <!-- Cards for this day would go here -->
+                  </div>
+                }
+              </div>
+
+              <!-- Lists Sidebar -->
+              <div class="mt-6 grid grid-cols-3 gap-4">
+                @for (list of board.lists; track list.id) {
+                  <div class="bg-white/5 rounded-lg p-4">
+                    <h3 class="text-white font-semibold mb-3 flex items-center gap-2">
+                      <span class="w-3 h-3 rounded-full"
+                            [class.bg-orange-500]="list.status === 'todo'"
+                            [class.bg-blue-500]="list.status === 'in-progress'"
+                            [class.bg-green-500]="list.status === 'done'"></span>
+                      {{ list.title }}
+                    </h3>
+                    <div class="space-y-2">
+                      @for (card of list.cards; track card.id) {
+                        <div class="bg-white/10 rounded p-2 text-sm">
+                          <div class="text-white font-medium">{{ card.title }}</div>
+                          <div class="text-white/50 text-xs mt-1">{{ card.description }}</div>
+                        </div>
+                      }
+                      @if (list.cards.length === 0) {
+                        <div class="text-white/30 text-sm text-center py-4">No cards</div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
